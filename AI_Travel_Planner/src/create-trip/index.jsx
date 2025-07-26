@@ -8,7 +8,7 @@ function CreateTrip() {
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({}); // Changed from array to object
+  const [formData, setFormData] = useState({}); 
 
   const handleInputChange = (name, value) => {
     setFormData({
