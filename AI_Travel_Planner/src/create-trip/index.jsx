@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Input } from "@/components/ui/input"
 import { SelectBudgetOptions, SelectTravelesList } from '@/constants/options'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 function CreateTrip() {
   const [destination, setDestination] = useState('');
@@ -22,7 +23,8 @@ function CreateTrip() {
   }, [formData]);
 
   const OnGenerateTrip = () => {
-    if (formData?.noOfDays > 5) {
+    if (formData?.noOfDays > 5 && !formData?.location || !formData?.budget || !formData?.traveler) {
+      toast("Please Fill all details")
       return;
     }
     console.log(formData);
@@ -70,7 +72,7 @@ function CreateTrip() {
 
   const selectDestination = (place) => {
     setDestination(place.formatted);
-    handleInputChange('destination', place.formatted); // Add destination to formData
+    handleInputChange('destination', place.formatted); 
     setShowDropdown(false);
     setSuggestions([]);
   };
