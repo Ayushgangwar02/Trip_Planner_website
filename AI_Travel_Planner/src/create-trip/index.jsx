@@ -3,13 +3,15 @@ import { Input } from "@/components/ui/input"
 import { SelectBudgetOptions, SelectTravelesList } from '@/constants/options'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { chatSession, AI_PROMPT } from '@/service/AIModel'
 
 function CreateTrip() {
   const [destination, setDestination] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({}); 
+  const [formData, setFormData] = useState({});
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -22,13 +24,7 @@ function CreateTrip() {
     console.log(formData);
   }, [formData]);
 
-  const OnGenerateTrip = () => {
-    if (formData?.noOfDays > 5 && !formData?.location || !formData?.budget || !formData?.traveler) {
-      toast("Please Fill all details")
-      return;
-    }
-    console.log(formData);
-  };
+
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -72,9 +68,36 @@ function CreateTrip() {
 
   const selectDestination = (place) => {
     setDestination(place.formatted);
-    handleInputChange('destination', place.formatted); 
+    handleInputChange('destination', place.formatted);
     setShowDropdown(false);
     setSuggestions([]);
+  };
+
+  const onGenerateTrip = async () => {
+    if (!formData?.destination || !formData?.noOfDays || !formData?.budget || !formData?.traveler) {
+      toast("Please fill all details");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const FINAL_PROMPT = AI_PROMPT
+        .replace('{destination}', formData?.destination)
+        .replace('{noOfDays}', formData?.noOfDays)
+        .replace('{budget}', formData?.budget)
+        .replace('{traveler}', formData?.traveler);
+
+      console.log(FINAL_PROMPT);
+      const result = await chatSession.sendMessage(FINAL_PROMPT);
+      console.log(result?.response?.text());
+      toast.success("Trip generated successfully!");
+
+    } catch (error) {
+      console.error("Error generating trip:", error);
+      toast.error("Failed to generate trip. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -170,7 +193,9 @@ function CreateTrip() {
       </div>
 
       <div className='my-10 justify-end flex'>
-        <Button onClick={OnGenerateTrip}>Generate Trip</Button>
+        <Button onClick={onGenerateTrip} disabled={isGenerating}>
+          {isGenerating ? 'Generating...' : 'Generate Trip'}
+        </Button>
       </div>
     </div>
   );
