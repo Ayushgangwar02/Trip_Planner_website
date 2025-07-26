@@ -4,6 +4,16 @@ import { SelectBudgetOptions, SelectTravelesList } from '@/constants/options'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { chatSession, AI_PROMPT } from '@/service/AIModel'
+import { FcGoogle } from "react-icons/fc";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { useGoogleLogin } from '@react-oauth/google'
 
 function CreateTrip() {
   const [destination, setDestination] = useState('');
@@ -11,6 +21,7 @@ function CreateTrip() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({});
+  const [openDialog, setOpenDialog] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleInputChange = (name, value) => {
@@ -23,6 +34,34 @@ function CreateTrip() {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResp) => {
+      console.log(codeResp);
+      getUserProfile(codeResp);
+    },
+    onError: (error) => console.log(error)
+  });
+
+  const getUserProfile = (tokenInfo) => {
+    fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`, {
+      headers: {
+        Authorization: `Bearer ${tokenInfo?.access_token}`,
+        Accept: 'Application/json'
+      }
+    })
+    .then((resp) => resp.json())
+    .then((user) => {
+      console.log('User Profile:', user);
+      localStorage.setItem('user', JSON.stringify(user));
+      setOpenDialog(false);
+      onGenerateTrip();
+    })
+    .catch((error) => {
+      console.error('Error fetching user profile:', error);
+      toast.error('Failed to get user profile');
+    });
+  };
 
 
 
@@ -74,6 +113,12 @@ function CreateTrip() {
   };
 
   const onGenerateTrip = async () => {
+    const user = localStorage.getItem('user');
+    if(!user){
+      setOpenDialog(true);
+      return;
+    }
+
     if (!formData?.destination || !formData?.noOfDays || !formData?.budget || !formData?.traveler) {
       toast("Please fill all details");
       return;
@@ -197,6 +242,32 @@ function CreateTrip() {
           {isGenerating ? 'Generating...' : 'Generate Trip'}
         </Button>
       </div>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <img src='/logo.svg' alt='logo' className="h-8 w-8" />
+          Sign in With Google
+        </DialogTitle>
+
+        <DialogDescription>
+          Sign in to the app with Google authentication securely
+        </DialogDescription>
+
+        <div className="mt-5">
+          <Button
+            onClick={login}
+            className="w-full flex gap-4 items-center"
+          >
+            <FcGoogle className='h-7 w-7' />
+            Sign In With Google
+          </Button>
+        </div>
+      </DialogHeader>
+
+
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
