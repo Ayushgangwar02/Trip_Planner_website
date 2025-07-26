@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { chatSession, AI_PROMPT } from '@/service/AIModel'
 import { FcGoogle } from "react-icons/fc";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   Dialog,
   DialogContent,
@@ -14,12 +15,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useGoogleLogin } from '@react-oauth/google'
+import { doc, setDoc } from 'firebase/firestore'
+import { db } from '@/service/firebase.config'
 
 function CreateTrip() {
   const [destination, setDestination] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [Loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -42,6 +46,8 @@ function CreateTrip() {
     },
     onError: (error) => console.log(error)
   });
+
+  
 
   const getUserProfile = (tokenInfo) => {
     fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`, {
@@ -124,7 +130,21 @@ function CreateTrip() {
       return;
     }
 
+    const SaveAiTrip=async(TripData)=>{
+      setLoading(true);
+      const user =JSON.parse (localStorage.getItem('user'));
+      const docId=Date.now().toString();
+      await setDoc(doc(db, "AiTrips", docId), {
+        userSelection:formData,
+        tripData:TripData,
+        userEmail:user?.email,
+        id:docId
+      });
+      setLoading(false);
+    };
+
     setIsGenerating(true);
+    setLoading(true);
     try {
       const FINAL_PROMPT = AI_PROMPT
         .replace('{destination}', formData?.destination)
@@ -132,10 +152,11 @@ function CreateTrip() {
         .replace('{budget}', formData?.budget)
         .replace('{traveler}', formData?.traveler);
 
-      console.log(FINAL_PROMPT);
       const result = await chatSession.sendMessage(FINAL_PROMPT);
       console.log(result?.response?.text());
+      setLoading(false);
       toast.success("Trip generated successfully!");
+      await SaveAiTrip(result?.response?.text());
 
     } catch (error) {
       console.error("Error generating trip:", error);
@@ -205,7 +226,7 @@ function CreateTrip() {
               <div
                 key={index}
                 onClick={() => handleInputChange('budget', item.title)}
-                className={`p-3 border cursor-pointer rounded-lg hover:shadow transition-all
+                className={`p-2 border cursor-pointer rounded-lg hover:shadow transition-all
                   ${formData?.budget === item.title ? 'shadow-lg border-black' : ''}
                 `}
               >
@@ -224,7 +245,7 @@ function CreateTrip() {
               <div
                 key={index}
                 onClick={() => handleInputChange('traveler', item.people)}
-                className={`p-3 border cursor-pointer rounded-lg hover:shadow transition-all
+                className={`p-2 border cursor-pointer rounded-lg hover:shadow transition-all
                   ${formData?.traveler === item.people ? 'shadow-lg border-black' : ''}
                 `}
               >
@@ -238,8 +259,14 @@ function CreateTrip() {
       </div>
 
       <div className='my-10 justify-end flex'>
-        <Button onClick={onGenerateTrip} disabled={isGenerating}>
-          {isGenerating ? 'Generating...' : 'Generate Trip'}
+
+        <Button
+          disabled={Loading || isGenerating}
+          onClick={onGenerateTrip}>
+          {isGenerating ? 'Generating...' : ''}
+          {Loading?
+          <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin'/>: 'Generate trip'}
+              
         </Button>
       </div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -257,10 +284,12 @@ function CreateTrip() {
         <div className="mt-5">
           <Button
             onClick={login}
-            className="w-full flex gap-4 items-center"
-          >
+            className="w-full flex gap-4 items-center">
+              
+              
             <FcGoogle className='h-7 w-7' />
             Sign In With Google
+            
           </Button>
         </div>
       </DialogHeader>
