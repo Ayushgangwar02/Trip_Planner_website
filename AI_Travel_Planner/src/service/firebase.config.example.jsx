@@ -5,14 +5,15 @@ import { getAuth } from "firebase/auth";            // ✅ Optional: if using au
 // import { getAnalytics } from "firebase/analytics"; // Optional: only use in browser
 
 // Your web app's Firebase configuration
+// 🔥 IMPORTANT: Replace these values with your own Firebase project credentials
 const firebaseConfig = {
-  apiKey: "AIzaSyCAUuYb8NiNGk0h1AJhOnh2lGYI_atEDzI",
-  authDomain: "ai-travel-planner-a85b3.firebaseapp.com",
-  projectId: "ai-travel-planner-a85b3",
-  storageBucket: "ai-travel-planner-a85b3.appspot.com", // ❗ FIXED: correct domain is `.appspot.com`
-  messagingSenderId: "722667913538",
-  appId: "1:722667913538:web:dab31224ae6ca898c348db",
-  measurementId: "G-L3JNE7MH9M"
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "your-project-id.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase
