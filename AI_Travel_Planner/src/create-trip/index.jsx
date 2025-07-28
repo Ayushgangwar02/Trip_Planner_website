@@ -17,6 +17,7 @@ import {
 import { useGoogleLogin } from '@react-oauth/google'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '@/service/firebase.config'
+import { useNavigate } from 'react-router-dom'
 
 function CreateTrip() {
   const [destination, setDestination] = useState('');
@@ -27,6 +28,8 @@ function CreateTrip() {
   const [formData, setFormData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -141,6 +144,7 @@ function CreateTrip() {
         id:docId
       });
       setLoading(false);
+      navigate(`/view-trip/${docId}`);
     };
 
     setIsGenerating(true);
