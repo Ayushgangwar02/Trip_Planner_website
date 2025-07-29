@@ -8,6 +8,26 @@ import Header from './components/custom/Header.jsx'
 import { Toaster } from '@/components/ui/sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import ViewTrip from './view-trip/[tripId]/index.jsx'
+
+// Global error handler for browser extension errors
+window.addEventListener('error', (event) => {
+  if (event.error?.message?.includes('message channel closed') ||
+      event.error?.message?.includes('listener indicated an asynchronous response')) {
+    console.log('Browser extension error (ignored):', event.error.message);
+    event.preventDefault();
+    return false;
+  }
+});
+
+// Handle unhandled promise rejections from extensions
+window.addEventListener('unhandledrejection', (event) => {
+  if (event.reason?.message?.includes('message channel closed') ||
+      event.reason?.message?.includes('listener indicated an asynchronous response')) {
+    console.log('Browser extension promise rejection (ignored):', event.reason.message);
+    event.preventDefault();
+    return false;
+  }
+});
 const router = createBrowserRouter([
   {
     path: "/",
