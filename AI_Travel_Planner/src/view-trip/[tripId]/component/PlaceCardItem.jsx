@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { FaMapLocation } from "react-icons/fa6";
+
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { GetPexelsPhoto } from '@/service/GlobalApi';
 
 function PlaceCardItem({ place }) {
    const [photoUrl, setPhotoUrl] = useState('/air.jpg');
-  
-        useEffect(() => {
-          if (place?.placeName) {
-            const placeSeed = place.placeName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const picsum_url = `https://picsum.photos/seed/${placeSeed}/400/300`;
-            setPhotoUrl(picsum_url);
-          }
-        }, [place]);
+
+   useEffect(() => {
+     if (place?.placeName) {
+       GetPexelsPhoto(place.placeName).then(url => {
+         if (url) setPhotoUrl(url);
+       });
+     }
+   }, [place]);
 
   return (
     <Link to={'https://www.google.com/maps/search/?api=1&query=' + place.placeName} target='_blank'>
@@ -22,7 +22,6 @@ function PlaceCardItem({ place }) {
           <h2 className='font-bold text-lg'>{place.placeName}</h2>
           <p className='text-sm text-gray-400'>{place.placeDetails}</p>
           <h2 className='mt-2'> 🕖 {place.bestTimeToVisit}</h2>
-          {/* <Button size="sm"><FaMapLocation /></Button> */}
         </div>
       </div>
     </Link>

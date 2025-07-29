@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { IoIosSend } from "react-icons/io";
-import { GetUnsplashPhoto } from '@/service/GlobalApi';
+import { GetPexelsPhoto } from '@/service/GlobalApi';
 
 function InfoSection({ trip }) {
   const [photoUrl, setPhotoUrl] = useState(null);
@@ -9,7 +9,7 @@ function InfoSection({ trip }) {
 
   useEffect(() => {
     if (destination) {
-      GetUnsplashPhoto(destination).then(url => {
+      GetPexelsPhoto(destination).then(url => {
         setPhotoUrl(url);
       });
     }
