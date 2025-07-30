@@ -1,5 +1,5 @@
 import './App.css'
-import Hero from './components/custom/hero.jsx'
+import Hero from './components/custom/Hero.jsx'
 import { Toaster } from '@/components/ui/sonner'
 
 function App() {
