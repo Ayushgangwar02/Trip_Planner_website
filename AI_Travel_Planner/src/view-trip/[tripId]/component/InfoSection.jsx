@@ -8,12 +8,17 @@ function InfoSection({ trip }) {
   const destination = trip?.userSelection?.destination;
 
   useEffect(() => {
-    if (destination) {
-      GetPexelsPhoto(destination).then(url => {
+  if (destination) {
+    GetPexelsPhoto(destination, "city").then(url => {
+      if (!url || url.includes("baby") || url.includes("portrait")) {
+        setPhotoUrl("/air.jpg");
+      } else {
         setPhotoUrl(url);
-      });
-    }
-  }, [destination]);
+      }
+    });
+  }
+}, [destination]);
+
 
   return (
     <div>

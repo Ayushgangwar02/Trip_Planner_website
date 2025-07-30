@@ -12,7 +12,7 @@ function PlacesToVisit({trip}) {
                     <div className='grid md:grid-cols-2 gap-5'>
                     {day.plan?.map((place, placeIndex) => (
                         <div key={placeIndex} className=''>
-                           <h2 className='font-medium text-sm text-orange-600 mt-5'>🕙 {place.timeToTravel}</h2>
+                           <h2 className='font-medium text-sm text-orange-600 mt-4 mb-3'>🕙 {place.timeToTravel}</h2>
                             <PlaceCardItem place={place}/>
                         </div>
                     ))}

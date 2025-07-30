@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+
 import {
   Popover,
   PopoverContent,
@@ -58,9 +59,11 @@ function Header() {
       <div>
         {user ? (
           <div className="flex items-center gap-3">
+            <a href='/my-trips'>
             <Button variant="outline" className="rounded-full">
               My Trip
             </Button>
+            </a>
             <Popover>
               <PopoverTrigger>
                 <img
