@@ -2,7 +2,7 @@ import React, { useEffect,useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/service/firebase.config';
-import UserTripCardItem from './component/UserTripCardItem';
+import UserTripCardItem from './component/UserTripCardItem.jsx';
 
 function MyTrips() {
   const navigate = useNavigate();

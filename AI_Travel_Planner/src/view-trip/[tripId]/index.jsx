@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/service/firebase.config'
 import { toast } from 'sonner'
-import InfoSection from './component/infoSection'
-import Hotels from './component/Hotels'
-import PlacesToVisit from './component/PlacesToVisit'
-import Footer from './component/Footer'
+import InfoSection from './component/InfoSection.jsx'
+import Hotels from './component/Hotels.jsx'
+import PlacesToVisit from './component/PlacesToVisit.jsx'
+import Footer from './component/Footer.jsx'
 
 function ViewTrip() {
     const {tripId}=useParams();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import HotelCardItem from './HotelCardItem';
+import HotelCardItem from './HotelCardItem.jsx';
 
 function Hotels({ trip }) {
   return (
