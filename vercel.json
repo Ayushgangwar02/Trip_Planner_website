@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd AI_Travel_Planner && npm install && npm run build",
+  "outputDirectory": "AI_Travel_Planner/dist",
+  "installCommand": "cd AI_Travel_Planner && npm install"
+}
