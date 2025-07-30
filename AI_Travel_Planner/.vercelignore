@@ -1,0 +1,7 @@
+# Ignore build cache
+.vercel
+dist
+node_modules
+
+# Ignore old case-sensitive files
+**/infoSection.jsx

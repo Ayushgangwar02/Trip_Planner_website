@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/service/firebase.config'
 import { toast } from 'sonner'
+// Import components for trip view
 import InfoSection from './component/InfoSection.jsx'
 import Hotels from './component/Hotels.jsx'
 import PlacesToVisit from './component/PlacesToVisit.jsx'
