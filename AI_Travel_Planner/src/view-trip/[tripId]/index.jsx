@@ -4,7 +4,7 @@ import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/service/firebase.config'
 import { toast } from 'sonner'
 // Import components for trip view
-import InfoSection from '@/view-trip/[tripId]/component/InfoSection.jsx'
+import InfoSection from '@/view-trip/[tripId]/component/TripInfoSection.jsx'
 import Hotels from './component/Hotels.jsx'
 import PlacesToVisit from './component/PlacesToVisit.jsx'
 import Footer from './component/Footer.jsx'
